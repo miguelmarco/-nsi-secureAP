@@ -1,0 +1,12 @@
+Secure AP
+
+Red: $ESSID
+
+Usuario: $USERNAME
+Contrasena: $PASSWORD
+
+Caducidad:
+$ENDTIME
+
+Seguridad: PEAP
+Fase2: MSCHAPv2

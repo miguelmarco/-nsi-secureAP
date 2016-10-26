@@ -1,0 +1,32 @@
+USERNAME=`< /dev/urandom tr -dc a-z0-9 | head -c10`
+PASSWORD=`< /dev/urandom tr -dc a-z0-9 | head -c16`
+ESSID=$( grep ssid /etc/config/wireless | awk '{ print $3 }' )
+ESSID=${ESSID:1:$((${#ESSID}-2))}
+ENDTIME = " "
+TIME=$1
+LINETOADD="$USERNAME Cleartext-Password := \"$PASSWORD\""
+
+if [ $2 ==  m ]
+then
+ENDTIME=$(($(date '+%s') + 60*$1))
+echo "$ENDTIME" > /etc/SecureAP/toremove/$USERNAME
+elif [ $2 == h ]
+then
+ENDTIME=$(($(date '+%s') + 60*60*$1))
+echo "$ENDTIME" > /etc/SecureAP/toremove/$USERNAME
+elif [ $2 == d ]
+then
+ENDTIME=$(($(date '+%s') + 24*60*60*$1))
+echo "$ENDTIME" > /etc/SecureAP/toremove/$USERNAME
+fi
+echo $LINETOADD >> /etc/freeradius2/users
+
+if [ $ENDTIME != " " ]
+then
+ENDTIME=$( date -d "@$ENDTIME" +"%d\/%m--%H\:%M" )
+fi 
+
+echo $ENDTIME
+sed "s/\$PASSWORD/$PASSWORD/g" printtemplate | sed "s/\$ESSID/$ESSID/g" | sed "s/\$USERNAME/$USERNAME/g" | sed "s/\$ENDTIME/$ENDTIME/g" >  /dev/usb/lp0
+
+/etc/init.d/radiusd restart

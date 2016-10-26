@@ -1,0 +1,11 @@
+TIME=$(date '+%s')
+for FILE in $(ls /etc/SecureAP/toremove)
+do
+FILETIME=$(cat /etc/SecureAP/toremove/$FILE)
+if [ "$TIME" -gt "$FILETIME" ]
+then
+rm /etc/SecureAP/toremove/$FILE
+sed -i "/${FILE}/d" /etc/freeradius2/users
+fi
+done
+/etc/init.d/radiusd restart
