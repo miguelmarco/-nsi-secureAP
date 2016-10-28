@@ -1,8 +1,8 @@
-USERNAME=`< /dev/urandom tr -dc a-z0-9 | head -c10`
-PASSWORD=`< /dev/urandom tr -dc a-z0-9 | head -c16`
+USERNAME=`< /dev/urandom tr -dc a-z0-9 | head -c8`
+PASSWORD=`< /dev/urandom tr -dc a-z0-9 | head -c12`
 ESSID=$( grep ssid /etc/config/wireless | awk '{ print $3 }' )
 ESSID=${ESSID:1:$((${#ESSID}-2))}
-ENDTIME = " "
+ENDTIME=""
 TIME=$1
 LINETOADD="$USERNAME Cleartext-Password := \"$PASSWORD\""
 
@@ -26,7 +26,9 @@ then
 ENDTIME=$( date -d "@$ENDTIME" +"%d\/%m--%H\:%M" )
 fi 
 
-echo $ENDTIME
-sed "s/\$PASSWORD/$PASSWORD/g" printtemplate | sed "s/\$ESSID/$ESSID/g" | sed "s/\$USERNAME/$USERNAME/g" | sed "s/\$ENDTIME/$ENDTIME/g" >  /dev/usb/lp0
+echo $(printf '\x1b\x21\x18\x1b\x47\x01') > /dev/usb/lp0 
+sed "s/\$PASSWORD/$PASSWORD/g" /etc/SecureAP/printtemplate | sed "s/\$ESSID/$ESSID/g" | sed "s/\$USERNAME/$USERNAME/g" | sed "s/\$ENDTIME/$ENDTIME/g" >  /dev/usb/lp0
 
 /etc/init.d/radiusd restart
+
+

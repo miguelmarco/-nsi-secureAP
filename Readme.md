@@ -31,3 +31,8 @@ In principle any OpenWRT compatible router with enough RAM, and a compatible USB
 
 In particular, we used a Floureon ZJ-5890T
 
+
+## To do
+
+- Configure restrictive firewall
+- Block access to global ip

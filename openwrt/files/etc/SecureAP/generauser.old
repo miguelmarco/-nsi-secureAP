@@ -1,0 +1,37 @@
+#! /bin/sh
+USERNAME=`< /dev/urandom tr -dc a-z0-9 | head -c10`
+PASSWORD=`< /dev/urandom tr -dc a-z0-9 | head -c16`
+TIME=$1
+LINETOADD="$USERNAME Cleartext-Password := \"$PASSWORD\""
+ESSID=$( grep ssid /etc/config/wireless | awk '{ print $3 }' )
+ESSID=${ESSID:1:$((${#ESSID}-2))}
+cat /etc/SecureAP/ticket_header > /dev/usb/lp0
+echo "" > /dev/usb/lp0
+echo "red: $ESSID" > /dev/usb/lp0
+echo "username: $USERNAME" > /dev/usb/lp0
+echo "password: $PASSWORD" > /dev/usb/lp0
+if [ $2 ==  m ]
+then
+ENDTIME=$(($(date '+%s') + 60*$1))
+echo "$ENDTIME" > /etc/SecureAP/toremove/$USERNAME
+echo "Expira:" > /dev/usb/lp0
+date -d "@$ENDTIME" > /dev/usb/lp0
+elif [ $2 == h ]
+then
+ENDTIME=$(($(date '+%s') + 60*60*$1))
+echo "$ENDTIME" > /etc/SecureAP/toremove/$USERNAME
+echo "Expira:" > /dev/usb/lp0                     
+date -d "@$ENDTIME" > /dev/usb/lp0   
+elif [ $2 == d ]
+then
+ENDTIME=$(($(date '+%s') + 24*60*60*$1))
+echo "$ENDTIME" > /etc/SecureAP/toremove/$USERNAME
+echo "Expira:" > /dev/usb/lp0                     
+date -d "@$ENDTIME" > /dev/usb/lp0   
+fi
+echo $LINETOADD >> /etc/freeradius2/users
+echo "" > /dev/usb/lp0
+cat /etc/SecureAP/ticket_footer > /dev/usb/lp0
+echo "" > /dev/usb/lp0
+echo "" > /dev/usb/lp0
+/etc/init.d/radiusd restart

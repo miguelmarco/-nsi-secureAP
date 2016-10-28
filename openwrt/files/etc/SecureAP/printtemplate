@@ -4,9 +4,13 @@ Red: $ESSID
 
 Usuario: $USERNAME
 Contrasena: $PASSWORD
+Certificado: NO
 
 Caducidad:
 $ENDTIME
 
 Seguridad: PEAP
 Fase2: MSCHAPv2
+
+
+

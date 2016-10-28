@@ -9,3 +9,4 @@ while true do
     os.execute("sh /etc/SecureAP/generauser " .. chr);
     os.execute("sleep 4");
 end;
+
