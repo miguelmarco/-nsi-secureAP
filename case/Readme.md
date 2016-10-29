@@ -9,4 +9,4 @@ These pictures show the setup:
 
 ![](case1.jpg)
 ![](case2.jpg)
-![](case2.jpg)
+![](case3.jpg)
