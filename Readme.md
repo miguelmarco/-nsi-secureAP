@@ -89,4 +89,5 @@ Now everything should be ready to go (maybe you might need to restart the router
 
 - Configure restrictive firewall
 - Block access to global ip
+- Internationalization of the interface (spanish only now)
 
